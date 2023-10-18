@@ -8,7 +8,7 @@ We do not have a global set up for dependencies -> manage dependencies locally b
 Put all files that you do not want to get tracked by git in your \italic{local} .gitignore file
 
 #### Branches
-Master Branch ------ 
+Master Branch ------> 
 
 ------> Eisuke Branch
 
