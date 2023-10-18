@@ -9,9 +9,7 @@ Put all files that you do not want to get tracked by git in your \italic{local} 
 
 #### Branches
 Master Branch ------> 
-
-------> Eisuke Branch
-
+this is my n\changes
 ------> Andreas Branch
 
 ------> Anders Branch
