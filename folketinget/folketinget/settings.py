@@ -63,8 +63,8 @@ ROBOTSTXT_OBEY = True
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 #ITEM_PIPELINES = {
-#    "folketinget.pipelines.FolketingetPipeline": 300,
-#}
+#     "folketinget.pipelines.SequentialCSVExportPipeline": 300,
+# }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
@@ -91,3 +91,26 @@ ROBOTSTXT_OBEY = True
 REQUEST_FINGERPRINTER_IMPLEMENTATION = "2.7"
 TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 FEED_EXPORT_ENCODING = "utf-8"
+
+
+# #FEED_EXPORTERS = {
+#     'csv': 'folketinget.custom_exporter.CustomCsvItemExporter',
+# }
+LOG_LEVEL = "ERROR"
+FEED_FORMAT = 'csv'
+
+#Change column order
+FEED_EXPORT_FIELDS = [
+            'meeting_id',
+            'agenda_item_id',
+            'question_item_id',
+            'speech_item_id',
+            'url',
+            'speech_item_text'
+            # 'url',
+            # 'title',
+            # 'date',
+            # 'time',
+            # 'day',
+            # 'agenda'
+            ]

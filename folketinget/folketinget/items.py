@@ -4,9 +4,18 @@
 # https://docs.scrapy.org/en/latest/topics/items.html
 
 import scrapy
+from scrapy import Field
 
 
 class FolketingetItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+    meeting_id = Field()
+    agenda_item_id = Field()
+    question_item_id= Field()
+    speech_item_id = Field()
+    url = Field()
+    #title = Field()
+    #date = Field()
+    #time = Field()
+    #day = Field()
+    speech_item_text = Field()
+    
