@@ -5,17 +5,27 @@
 
 import scrapy
 from scrapy import Field
+    
+class MeetingItem(scrapy.Item):
+    meeting_id = Field()
+    url = Field()
+    date = Field()
 
-
-class FolketingetItem(scrapy.Item):
+class AgendaItem(scrapy.Item):
     meeting_id = Field()
     agenda_item_id = Field()
-    question_item_id= Field()
+    title = Field()
+    type = Field()
+    
+class SpeechItem(scrapy.Item):
+    meeting_id = Field()
+    agenda_item_id = Field()
     speech_item_id = Field()
-    url = Field()
-    #title = Field()
-    #date = Field()
-    #time = Field()
-    #day = Field()
+    time_start = Field()
+    time_end = Field()
+    speaker_name = Field()
+    speaker_party = Field()
+    speaker_role = Field()
+    speaker_title = Field()
     speech_item_text = Field()
     

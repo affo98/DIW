@@ -25,7 +25,7 @@ ROBOTSTXT_OBEY = True
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-#DOWNLOAD_DELAY = 3
+#DOWNLOAD_DELAY = 2
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
 #CONCURRENT_REQUESTS_PER_IP = 16
@@ -100,17 +100,6 @@ LOG_LEVEL = "ERROR"
 FEED_FORMAT = 'csv'
 
 #Change column order
-FEED_EXPORT_FIELDS = [
-            'meeting_id',
-            'agenda_item_id',
-            'question_item_id',
-            'speech_item_id',
-            'url',
-            'speech_item_text'
-            # 'url',
-            # 'title',
-            # 'date',
-            # 'time',
-            # 'day',
-            # 'agenda'
-            ]
+# FEED_EXPORT_FIELDS = {
+#     '...items.SpeechItem': ['speech_item_id','speech_item_text']
+#     }
