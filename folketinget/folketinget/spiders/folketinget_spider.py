@@ -98,14 +98,14 @@ class FolketingetSpider(scrapy.Spider):
 
     def find_data_agenda(self, agenda_item):  
         agenda_title = agenda_item.select_one('meta[name="ShortTitle"]').get('content')
-        #time_stamps = agenda_item.find_all('p', attrs={'class': 'Tid'})
-        #time_start = time_stamps[0].get_text(strip=True)
-        #time_end = time_stamps[-1].get_text(strip=True)
         return agenda_title
     
     def find_data_speech(self, speech_item):
         time_start = speech_item.select_one('meta[name="StartDateTime"]').get('content')
-        time_end = speech_item.select_one('meta[name="EndDateTime"]').get('content')
+        try:
+            time_end = speech_item.select_one('meta[name="EndDateTime"]').get('content')
+        except AttributeError:
+            time_end = None
         speaker_first_name = speech_item.select_one('meta[name="OratorFirstName"]').get('content')
         speaker_last_name = speech_item.select_one('meta[name="OratorLastName"]').get('content')
         speaker_name = str(speaker_first_name) + ' ' + str(speaker_last_name)
@@ -164,7 +164,7 @@ class FolketingetSpider(scrapy.Spider):
         
     
     def start_requests(self):
-        for i in range(1,2): #12
+        for i in range(1,12): 
             url = f"https://www.ft.dk/da/dokumenter/dokumentlister/referater?startDate=20041005&endDate=20231001&totalNumberOfRecords=2088&pageSize=200&pageNumber={i}"
             self.urls.append(url)
             
@@ -182,7 +182,7 @@ class FolketingetSpider(scrapy.Spider):
             self.htm_files = [str(item) for sublist in self.htm_files for item in sublist] #flatten into single list
             self.htm_files = ['https://www.ft.dk' + htm_file for htm_file in self.htm_files] #add prefix to htm filenames
 
-            for htm_file in self.htm_files[0:2]:
+            for htm_file in self.htm_files:
                 response = requests.get(htm_file)
                 response.encoding = 'utf-8'
                 htm_page_soup = BeautifulSoup(response.text, 'html.parser', from_encoding='utf-8')
@@ -194,9 +194,6 @@ class FolketingetSpider(scrapy.Spider):
                 #parsing the whole page
                 yield from self.parse_htm_file(htm_page_soup)
                 #yield scrapy.Request(url=htm_file, callback=self.parse_htm_file)
-        
-
-                
               
     def parse_htm_file(self, response):
         #Seperate into agenda items using "Skillestreg"

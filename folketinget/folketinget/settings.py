@@ -96,7 +96,7 @@ FEED_EXPORT_ENCODING = "utf-8"
 # #FEED_EXPORTERS = {
 #     'csv': 'folketinget.custom_exporter.CustomCsvItemExporter',
 # }
-LOG_LEVEL = "ERROR"
+#LOG_LEVEL = "ERROR"
 FEED_FORMAT = 'csv'
 
 #Change column order
