@@ -175,8 +175,9 @@ def postprocess_agenda_data(data_speech):
     )
     data_agenda.drop(columns=["time_start_f", "time_end_f"], inplace=True)
 
-    # remove agenda items with missing text
+    # remove agenda items with missing text and reset index
     data_agenda = data_agenda[pd.notna(data_agenda["speech_item_text"])]
+    data_agenda = data_agenda.reset_index(drop=True)
 
     # add number of words
     data_agenda["number_of_words"] = (
