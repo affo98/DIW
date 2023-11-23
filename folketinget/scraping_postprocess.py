@@ -36,6 +36,8 @@ def postprocess_meeting_data():
     data_meeting["day"] = date_list.str.get(0)
     data_meeting["time_start"] = date_list.str.get(-1)
 
+    data_meeting = data_meeting.reset_index(drop=True)
+
     # save as parquet
     data_meeting_pq = pa.Table.from_pandas(data_meeting)
     pq.write_table(data_meeting_pq, "./data/data_meeting.parquet")
@@ -116,11 +118,19 @@ def postprocess_speech_data():
         data_speech["speech_item_text"].str.split(" ").apply(len)
     )
 
-    # split into two datasets and save
-    data_speech_1 = pa.Table.from_pandas(data_speech.iloc[: (len(data_speech) // 2)])
-    data_speech_2 = pa.Table.from_pandas(data_speech.iloc[(len(data_speech) // 2) :])
+    data_speech = data_speech.reset_index(drop=True)
+
+    # split into three datasets and save
+    split_point_1 = len(data_speech) // 3
+    split_point_2 = 2 * (len(data_speech) // 3)
+
+    data_speech_1 = pa.Table.from_pandas(data_speech.iloc[:split_point_1])
+    data_speech_2 = pa.Table.from_pandas(data_speech.iloc[split_point_1:split_point_2])
+    data_speech_3 = pa.Table.from_pandas(data_speech.iloc[split_point_2:])
+
     pq.write_table(data_speech_1, "./data/data_speech1.parquet")
     pq.write_table(data_speech_2, "./data/data_speech2.parquet")
+    pq.write_table(data_speech_3, "./data/data_speech3.parquet")
 
     return data_speech
 
@@ -185,10 +195,17 @@ def postprocess_agenda_data(data_speech):
     )
 
     # split intwo two datasets and save
-    data_agenda_1 = pa.Table.from_pandas(data_agenda.iloc[: (len(data_agenda) // 2)])
-    data_agenda_2 = pa.Table.from_pandas(data_agenda.iloc[(len(data_agenda) // 2) :])
+    split_point_1 = len(data_agenda) // 3
+    split_point_2 = 2 * (len(data_agenda) // 3)
+
+    data_agenda_1 = pa.Table.from_pandas(data_agenda.iloc[:split_point_1])
+    data_agenda_2 = pa.Table.from_pandas(data_agenda.iloc[split_point_1:split_point_2])
+    data_agenda_3 = pa.Table.from_pandas(data_agenda.iloc[split_point_2:])
+
+    # Save the three datasets
     pq.write_table(data_agenda_1, "./data/data_agenda1.parquet")
     pq.write_table(data_agenda_2, "./data/data_agenda2.parquet")
+    pq.write_table(data_agenda_3, "./data/data_agenda3.parquet")
 
 
 postprocess_meeting_data()

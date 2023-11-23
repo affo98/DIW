@@ -156,7 +156,7 @@ class FolketingetSpider(scrapy.Spider):
         speech_item_text = [
             e.get_text()
             for e in speech_item.find_all(
-                "p", class_=["Tekst", "TekstIndtryk", "TekstLuft"]
+                "p", class_=["Tekst", "TekstLuft", "TekstIndryk"]
             )
         ]
         speech_item_text = " ".join(speech_item_text)
