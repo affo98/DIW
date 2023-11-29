@@ -1,1 +1,2 @@
 *.csv
+/folketinget/data/data_speech_tokenized.parquet
