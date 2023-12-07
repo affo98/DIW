@@ -167,18 +167,8 @@ def postprocess_agenda_data(data_speech):
     # remove redundant columns
     data_agenda = data_agenda[["meeting_id", "agenda_item_id", "title", "type"]]
 
-    # split intwo two datasets and save
-    split_point_1 = len(data_agenda) // 3
-    split_point_2 = 2 * (len(data_agenda) // 3)
-
-    data_agenda_1 = pa.Table.from_pandas(data_agenda.iloc[:split_point_1])
-    data_agenda_2 = pa.Table.from_pandas(data_agenda.iloc[split_point_1:split_point_2])
-    data_agenda_3 = pa.Table.from_pandas(data_agenda.iloc[split_point_2:])
-
-    # Save the three datasets
-    pq.write_table(data_agenda_1, "./data/data_agenda1.parquet")
-    pq.write_table(data_agenda_2, "./data/data_agenda2.parquet")
-    pq.write_table(data_agenda_3, "./data/data_agenda3.parquet")
+    # Save
+    pq.write_table(data_agenda, "./data/data_agenda.parquet")
 
 
 postprocess_meeting_data()
