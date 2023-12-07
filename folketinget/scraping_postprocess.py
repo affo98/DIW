@@ -118,6 +118,12 @@ def postprocess_speech_data():
         data_speech["speech_item_text"].str.split(" ").apply(len)
     )
 
+    data_speech["speaker_title"] = np.where(
+        data_speech["speaker_role"] == "minister",
+        data_speech["speaker_title"].str.split("(").str[0],
+        "medlem",
+    )
+
     data_speech = data_speech.reset_index(drop=True)
 
     # split into three datasets and save
@@ -153,46 +159,13 @@ def postprocess_agenda_data(data_speech):
     data_agenda = data_agenda.merge(
         data_speech_group_text, on=["meeting_id", "agenda_item_id"], how="left"
     )
-    # Add time_start and time_end from speech_data
-    data_speech_group_time_start = data_speech_group["time_start"].first().reset_index()
-    data_speech_group_time_end = data_speech_group["time_end"].last().reset_index()
-    data_agenda = data_agenda.merge(
-        data_speech_group_time_start, on=["meeting_id", "agenda_item_id"], how="left"
-    )
-    data_agenda = data_agenda.merge(
-        data_speech_group_time_end, on=["meeting_id", "agenda_item_id"], how="left"
-    )
-
-    # add duration column
-    data_agenda["time_start_f"] = pd.to_datetime(
-        data_agenda["time_start"], format="%H:%M:%S"
-    )
-    data_agenda["time_end_f"] = pd.to_datetime(
-        data_agenda["time_end"], format="%H:%M:%S"
-    )
-
-    data_agenda["duration"] = np.where(
-        # if it crosses midnight
-        data_agenda["time_start_f"].dt.hour > data_agenda["time_end_f"].dt.hour,
-        (
-            pd.to_datetime("23:59:59", format="%H:%M:%S") - data_agenda["time_start_f"]
-        ).dt.total_seconds()
-        + (
-            data_agenda["time_end_f"] - pd.to_datetime("00:00:00", format="%H:%M:%S")
-        ).dt.total_seconds(),
-        # else
-        (data_agenda["time_end_f"] - data_agenda["time_start_f"]).dt.total_seconds(),
-    )
-    data_agenda.drop(columns=["time_start_f", "time_end_f"], inplace=True)
 
     # remove agenda items with missing text and reset index
     data_agenda = data_agenda[pd.notna(data_agenda["speech_item_text"])]
     data_agenda = data_agenda.reset_index(drop=True)
 
-    # add number of words
-    data_agenda["number_of_words"] = (
-        data_agenda["speech_item_text"].str.split(" ").apply(len)
-    )
+    # remove redundant columns
+    data_agenda = data_agenda[["meeting_id", "agenda_item_id", "title", "type"]]
 
     # split intwo two datasets and save
     split_point_1 = len(data_agenda) // 3
