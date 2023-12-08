@@ -194,3 +194,58 @@ def add_features(df, C_word_set, NC_word_set, g_word_set, word_vec_model):
 
     df["average_vec"] = word_vec_list
     return df
+
+
+    def add_custom_features(df, C_word_set, word_vec_model):
+    count_list = []
+    speech_list = []
+    word_vec_list = []
+
+    df["speech_item_tokenized"] = df["speech_item_tokenized"].apply(lambda x: eval(x))
+    tokenized_list = df["speech_item_tokenized"].to_list()
+    for i in tokenized_list:
+        C_counts = 0
+        C_words = []
+        average_vec = 0
+
+        tokenized = i
+        for word in tokenized:
+            if word in C_word_set:
+              C_counts += 1
+              C_words.append(word)
+              try:
+                vec = word_vec_model.get_vector(word)
+                average_vec += vec
+              except:
+                C_counts -= 1
+                C_words.pop()
+
+        count_list.append(C_counts)
+        speech_list.append(C_words)
+        if C_counts != 0:
+            average_vec = average_vec / C_counts
+        else:
+            average_vec = np.zeros((500,), dtype=int)
+        word_vec_list.append(average_vec)
+
+    df["C_counts"] = count_list
+    df["C_words"] = speech_list
+
+    df["average_vec_C"] = word_vec_list
+    return df
+
+
+def calculate_custom_odds(freq1, freq2, freq_count_1):
+    """
+    this function does that.
+    """
+    if freq2 == 0:
+        if freq1 == 0:
+            return 0
+        else:
+            return freq1 / freq_count_1
+    else:
+        if freq1 == 0:
+            return 0
+        else:
+            return freq1 / freq2
