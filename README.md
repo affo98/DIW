@@ -1,4 +1,4 @@
-#  Political climate
+#  Climate Trends in the Political Discourse of the Danish Parliament
 
 ### Description
 This repository contains code and data for the project for Data in the Wild: Wrangling and Visualising Data, Autumn 2024. 
